@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -8,6 +10,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     console.log('resuest received!');
