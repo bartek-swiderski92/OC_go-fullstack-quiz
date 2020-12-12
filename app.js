@@ -27,14 +27,14 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.post('/api/stuff', (req, res, next) => {
+app.post('/api/products', (req, res, next) => {
     const product = new Product({
-        title: req.body.title,
+        name: req.body.name,
         description: req.body.description,
         price: req.body.price,
         inStock: req.body.inStock
     });
-    thing.save()
+    product.save()
         .then(() => {
             res.status(201).json({
                 message: 'Post saved successfulyl!'
@@ -45,6 +45,18 @@ app.post('/api/stuff', (req, res, next) => {
                 error: error
             }))
 });
+
+app.get('/api/products/:id', (req, res, next) => {
+    Product.findOne({
+        _id: req.params.id
+    }).then((thing) => {
+        res.status(200).json(thing);
+    }).catch((error) => {
+        res.status(404).json({
+            error: error
+        })
+    })
+})
 
 app.use((req, res, next) => {
     Product.find().then((products) => {
