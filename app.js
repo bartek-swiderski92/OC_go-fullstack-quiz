@@ -1,8 +1,22 @@
+// MONGODB PW:wHvLYbe7DwLZ3ZB
+// MONGODB CONNECTION: mongodb+srv://Will:<password>@cluster0.13etx.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Product = require('./models/product')
 
 const app = express();
+
+mongoose.connect('mongodb+srv://Will:wHvLYbe7DwLZ3ZB@cluster0.13etx.mongodb.net/<dbname>?retryWrites=true&w=majority')
+    .then(() => {
+        console.log('Successfully connected to MongoDB Atlas!');
+    })
+    .catch((error) => {
+        console.log('Unable to connect to MongoDB Atlas!');
+        console.error(error)
+    })
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,25 +27,33 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    console.log('resuest received!');
-    next();
-});
-
-app.use((req, res, next) => {
-    res.status(201);
-    next();
-});
-
-app.use((req, res, next) => {
-    res.json({
-        message: 'sucess!'
+app.post('/api/stuff', (req, res, next) => {
+    const product = new Product({
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        inStock: req.body.inStock
     });
-    next();
+    thing.save()
+        .then(() => {
+            res.status(201).json({
+                message: 'Post saved successfulyl!'
+            })
+        })
+        .catch((error) =>
+            res.status(400).json({
+                error: error
+            }))
 });
 
 app.use((req, res, next) => {
-    console.log('response sent sucessfuly!');
-})
+    Product.find().then((products) => {
+        res.status(200).json(products);
+    }).catch((error) => {
+        res.status(400).json({
+            error: error
+        })
+    });
+});
 
 module.exports = app;
