@@ -45,6 +45,17 @@ app.post('/api/products', (req, res, next) => {
                 error: error
             }))
 });
+app.get('/api/products', (req, res, next) => {
+    Product.find().then((products) => {
+        res.status(200).json({
+            products
+        });
+    }).catch((error) => {
+        res.status(400).json({
+            error: error
+        })
+    });
+});
 
 app.get('/api/products/:id', (req, res, next) => {
     Product.findOne({
@@ -57,19 +68,31 @@ app.get('/api/products/:id', (req, res, next) => {
         res.status(404).json({
             error: error
         })
-    })
-})
-
-app.get('/api/products', (req, res, next) => {
-    Product.find().then((products) => {
-        res.status(200).json({
-            products
-        });
-    }).catch((error) => {
-        res.status(400).json({
-            error: error
-        })
     });
 });
+
+app.put('/api/products/:id', (req, res, next) => {
+    const product = new Product({
+        _id: req.params.id,
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        inStock: req.body.inStock
+    });
+    Product.updateOne({
+            _id: req.params.id
+        }, product)
+        .then(() => {
+            res.status(201).json({
+                message: 'Modified!'
+            });
+        })
+        .catch((error) => {
+            res.status(400).json({
+                error: error
+            })
+        });
+});
+
 
 module.exports = app;
