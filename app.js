@@ -37,7 +37,7 @@ app.post('/api/products', (req, res, next) => {
     product.save()
         .then(() => {
             res.status(201).json({
-                message: 'Post saved successfulyl!'
+                product
             })
         })
         .catch((error) =>
@@ -58,7 +58,7 @@ app.get('/api/products/:id', (req, res, next) => {
     })
 })
 
-app.use((req, res, next) => {
+app.get('/api/products', (req, res, next) => {
     Product.find().then((products) => {
         res.status(200).json(products);
     }).catch((error) => {
